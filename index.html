@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AETHER OS</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+:root {
+  --bg: #07080d;
+  --panel: rgba(18, 20, 30, 0.82);
+  --panel-2: rgba(25, 28, 42, 0.92);
+  --border: rgba(255,255,255,.1);
+  --text: #f5f7ff;
+  --muted: #9298aa;
+  --accent: #8b7cff;
+  --accent-2: #4de7ff;
+  --danger: #ff5d73;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* BOOT */
+
+#boot {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #05060a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity .8s ease, visibility .8s ease;
+}
+
+#boot.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.boot-logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 28px;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: white;
+  box-shadow:
+    0 0 40px rgba(139,124,255,.4),
+    0 0 100px rgba(77,231,255,.12);
+  animation: bootPulse 1.8s infinite alternate;
+}
+
+.boot-name {
+  margin-top: 25px;
+  font-size: 30px;
+  letter-spacing: 8px;
+  font-weight: 800;
+}
+
+.boot-status {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.boot-bar {
+  width: 220px;
+  height: 3px;
+  background: #202331;
+  border-radius: 99px;
+  margin-top: 22px;
+  overflow: hidden;
+}
+
+.boot-progress {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  animation: bootLoad 2.3s ease forwards;
+}
+
+@keyframes bootLoad {
+  to { width: 100%; }
+}
+
+@keyframes bootPulse {
+  from { transform: scale(.96); }
+  to { transform: scale(1.04); }
+}
+
+/* DESKTOP */
+
+#desktop {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(139,124,255,.14), transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(77,231,255,.1), transparent 32%),
+    linear-gradient(135deg, #07080d, #0b0d16 50%, #07080d);
+}
+
+#desktop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .16;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* TOP */
+
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 46px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  background: rgba(7,8,13,.62);
+  backdrop-filter: blur(22px);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: 3px;
+  font-size: 13px;
+}
+
+.system {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.system-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5cff9a;
+  box-shadow: 0 0 12px #5cff9a;
+}
+
+/* DESKTOP ICONS */
+
+.desktop-icons {
+  position: absolute;
+  top: 70px;
+  left: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 2;
+}
+
+.desktop-icon {
+  width: 78px;
+  text-align: center;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-radius: 12px;
+  transition: .2s;
+}
+
+.desktop-icon:hover {
+  background: rgba(255,255,255,.07);
+}
+
+.icon-box {
+  width: 48px;
+  height: 48px;
+  margin: auto;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 25px rgba(0,0,0,.2);
+}
+
+.desktop-icon span {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  color: #d8dbea;
+}
+
+/* CENTER */
+
+.center {
+  position: absolute;
+  inset: 46px 0 64px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.aether-mark {
+  text-align: center;
+  opacity: .72;
+}
+
+.aether-orbit {
+  width: 230px;
+  height: 230px;
+  border: 1px solid rgba(139,124,255,.16);
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 18s linear infinite;
+}
+
+.aether-orbit::before,
+.aether-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 25px;
+  border: 1px solid rgba(77,231,255,.12);
+  border-radius: 50%;
+}
+
+.aether-core {
+  position: absolute;
+  inset: 82px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow:
+    0 0 35px rgba(139,124,255,.4),
+    0 0 80px rgba(77,231,255,.18);
+  animation: corePulse 2.5s ease-in-out infinite;
+}
+
+.aether-title {
+  margin-top: 30px;
+  letter-spacing: 12px;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.aether-sub {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes corePulse {
+  50% { transform: scale(1.12); }
+}
+
+/* TASKBAR */
+
+.taskbar {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 50px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 5000;
+  background: rgba(16,18,27,.82);
+  backdrop-filter: blur(25px);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  box-shadow: 0 15px 50px rgba(0,0,0,.4);
+}
+
+.task {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  transition: .2s;
+}
+
+.task:hover {
+  background: rgba(255,255,255,.09);
+  transform: translateY(-2px);
+}
+
+.task.start {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+/* WINDOWS */
+
+.window {
+  position: absolute;
+  width: 620px;
+  min-width: 320px;
+  min-height: 220px;
+  background: var(--panel);
+  backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  overflow: hidden;
+  box-shadow: 0 30px 100px rgba(0,0,0,.5);
+  z-index: 100;
+  animation: windowIn .25s ease;
+}
+
+.window.hidden {
+  display: none;
+}
+
+.window.maximized {
+  inset: 60px 15px 75px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.window-header {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  background: rgba(255,255,255,.025);
+  border-bottom: 1px solid var(--border);
+  cursor: grab;
+}
+
+.window-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.window-controls {
+  display: flex;
+  gap: 7px;
+}
+
+.win-btn {
+  width: 27px;
+  height: 27px;
+  border: 0;
+  border-radius: 8px;
+  color: #aaa;
+  background: transparent;
+  cursor: pointer;
+}
+
+.win-btn:hover {
+  background: rgba(255,255,255,.08);
+  color: white;
+}
+
+.win-btn.close:hover {
+  background: var(--danger);
+}
+
+.window-body {
+  height: calc(100% - 45px);
+  padding: 20px;
+  overflow: auto;
+}
+
+/* APP CONTENT */
+
+.app-heading {
+  font-size: 25px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.app-description {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 22px;
+}
+
+/* FILES */
+
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px,1fr));
+  gap: 12px;
+}
+
+.file {
+  padding: 16px 8px;
+  text-align: center;
+  border-radius: 13px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.025);
+  cursor: pointer;
+}
+
+.file:hover {
+  background: rgba(139,124,255,.1);
+  border-color: rgba(139,124,255,.3);
+}
+
+.file-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.file-name {
+  font-size: 11px;
+  color: #d6d8e3;
+}
+
+/* TERMINAL */
+
+.terminal {
+  background: #05060a;
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 280px;
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  color: #d9f7e5;
+}
+
+.terminal-output {
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.terminal-line {
+  display: flex;
+  margin-top: 8px;
+}
+
+.terminal-line span {
+  color: var(--accent-2);
+  margin-right: 8px;
+}
+
+.terminal-input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: white;
+  font: inherit;
+}
+
+/* NOTES */
+
+textarea {
+  width: 100%;
+  height: 300px;
+  resize: none;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+  background: rgba(0,0,0,.2);
+  color: white;
+  padding: 16px;
+  font: 14px/1.6 inherit;
+}
+
+/* SETTINGS */
+
+.setting {
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setting small {
+  color: var(--muted);
+  display: block;
+  margin-top: 4px;
+}
+
+.toggle {
+  width: 42px;
+  height: 23px;
+  border-radius: 20px;
+  background: #303442;
+  cursor: pointer;
+  padding: 3px;
+}
+
+.toggle::after {
+  content: "";
+  display: block;
+  width: 17px;
+  height: 17px;
+  background: white;
+  border-radius: 50%;
+  transition: .2s;
+}
+
+.toggle.active {
+  background: var(--accent);
+}
+
+.toggle.active::after {
+  transform: translateX(19px);
+}
+
+/* LAUNCHER */
+
+.launcher {
+  position: fixed;
+  left: 50%;
+  bottom: 78px;
+  transform: translateX(-50%) scale(.95);
+  width: min(520px, calc(100vw - 30px));
+  padding: 16px;
+  z-index: 6000;
+  background: rgba(14,16,25,.94);
+  backdrop-filter: blur(35px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 30px 100px rgba(0,0,0,.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: .2s;
+}
+
+.launcher.open {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+  pointer-events: auto;
+}
+
+.launcher-search {
+  width: 100%;
+  height: 45px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: rgba(255,255,255,.04);
+  color: white;
+  outline: none;
+}
+
+.app-list {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.launch-app {
+  padding: 14px 5px;
+  text-align: center;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.launch-app:hover {
+  background: rgba(255,255,255,.07);
+}
+
+.launch-app div {
+  font-size: 23px;
+  margin-bottom: 5px;
+}
+
+.launch-app small {
+  color: var(--muted);
+}
+
+/* NOTIFICATION */
+
+.notification {
+  position: fixed;
+  top: 60px;
+  right: 18px;
+  width: 280px;
+  padding: 15px;
+  border-radius: 14px;
+  background: rgba(20,22,33,.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 50px rgba(0,0,0,.4);
+  transform: translateX(130%);
+  transition: .35s;
+  z-index: 9000;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification-title {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.notification-text {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+  .system {
+    display: none;
+  }
+
+  .window {
+    width: calc(100vw - 20px) !important;
+    left: 10px !important;
+    top: 60px !important;
+  }
+
+  .desktop-icons {
+    left: 10px;
+  }
+
+  .aether-title {
+    font-size: 23px;
+    letter-spacing: 7px;
+  }
+
+  .taskbar {
+    bottom: 8px;
+  }
+
+  .app-list {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+@keyframes windowIn {
+  from {
+    opacity: 0;
+    transform: scale(.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- BOOT -->
+
+<div id="boot">
+  <div class="boot-logo">A</div>
+  <div class="boot-name">AETHER</div>
+  <div class="boot-status">Initializing system...</div>
+  <div class="boot-bar">
+    <div class="boot-progress"></div>
+  </div>
+</div>
+
+<!-- DESKTOP -->
+
+<div id="desktop">
+
+  <div class="topbar">
+    <div class="brand">AETHER</div>
+
+    <div class="system">
+      <span class="system-dot"></span>
+      <span>SYSTEM ONLINE</span>
+      <span id="clock">00:00</span>
+    </div>
+  </div>
+
+  <!-- DESKTOP ICONS -->
+
+  <div class="desktop-icons">
+
+    <div class="desktop-icon" onclick="openApp('files')">
+      <div class="icon-box">📁</div>
+      <span>Files</span>
+    </div>
+
+    <div class="desktop-icon" onclick="openApp('terminal')">
+      <div class="icon-box">⌘</div>
+      <span>Terminal</span>
+    </div>
+
+    <div class="desktop-icon" onclick="openApp('notes')">
+      <div class="icon-box">📝</div>
+      <span>Notes</span>
+    </div>
+
+    <div class="desktop-icon" onclick="openApp('settings')">
+      <div class="icon-box">⚙️</div>
+      <span>Settings</span>
+    </div>
+
+  </div>
+
+  <!-- CENTER -->
+
+  <div class="center">
+    <div class="aether-mark">
+
+      <div class="aether-orbit">
+        <div class="aether-core"></div>
+      </div>
+
+      <div class="aether-title">AETHER</div>
+      <div class="aether-sub">THE NEXT DESKTOP</div>
+
+    </div>
+  </div>
+
+  <!-- FILES WINDOW -->
+
+  <div class="window hidden" id="files-window"
+       style="left: 15%; top: 15%; height: 480px;">
+
+    <div class="window-header">
+      <div class="window-title">📁 Files</div>
+
+      <div class="window-controls">
+        <button class="win-btn" onclick="maximize('files-window')">□</button>
+        <button class="win-btn close" onclick="closeApp('files')">×</button>
+      </div>
+    </div>
+
+    <div class="window-body">
+
+      <div class="app-heading">Files</div>
+      <div class="app-description">Your AETHER workspace.</div>
+
+      <div class="file-grid">
+
+        <div class="file">
+          <div class="file-icon">📂</div>
+          <div class="file-name">Documents</div>
+        </div>
+
+        <div class="file">
+          <div class="file-icon">📂</div>
+          <div class="file-name">Projects</div>
+        </div>
+
+        <div class="file">
+          <div class="file-icon">📂</div>
+          <div class="file-name">Downloads</div>
+        </div>
+
+        <div class="file">
+          <div class="file-icon">📂</div>
+          <div class="file-name">Pictures</div>
+        </div>
+
+        <div class="file">
+          <div class="file-icon">📄</div>
+          <div class="file-name">README.txt</div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TERMINAL WINDOW -->
+
+  <div class="window hidden" id="terminal-window"
+       style="left: 20%; top: 20%; height: 430px;">
+
+    <div class="window-header">
+      <div class="window-title">⌘ Terminal</div>
+
+      <div class="window-controls">
+        <button class="win-btn" onclick="maximize('terminal-window')">□</button>
+        <button class="win-btn close" onclick="closeApp('terminal')">×</button>
+      </div>
+    </div>
+
+    <div class="window-body">
+
+      <div class="terminal">
+
+        <div class="terminal-output" id="terminal-output">
+AETHER Terminal
+Type "help" to see available commands.
+
+        </div>
+
+        <div class="terminal-line">
+          <span>aether@system:~$</span>
+          <input
+            class="terminal-input"
+            id="terminal-input"
+            autocomplete="off"
+            spellcheck="false"
+          >
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NOTES WINDOW -->
+
+  <div class="window hidden" id="notes-window"
+       style="left: 25%; top: 18%; height: 450px;">
+
+    <div class="window-header">
+
+      <div class="window-title">📝 Notes</div>
+
+      <div class="window-controls">
+        <button class="win-btn" onclick="maximize('notes-window')">□</button>
+        <button class="win-btn close" onclick="closeApp('notes')">×</button>
+      </div>
+
+    </div>
+
+    <div class="window-body">
+
+      <div class="app-heading">Quick Notes</div>
+      <div class="app-description">Saved automatically on this device.</div>
+
+      <textarea id="notes" placeholder="Start typing..."></textarea>
+
+    </div>
+  </div>
+
+  <!-- SETTINGS WINDOW -->
+
+  <div class="window hidden" id="settings-window"
+       style="left: 30%; top: 16%; height: 450px;">
+
+    <div class="window-header">
+
+      <div class="window-title">⚙️ Settings</div>
+
+      <div class="window-controls">
+        <button class="win-btn" onclick="maximize('settings-window')">□</button>
+        <button class="win-btn close" onclick="closeApp('settings')">×</button>
+      </div>
+
+    </div>
+
+    <div class="window-body">
+
+      <div class="app-heading">Settings</div>
+      <div class="app-description">Configure your AETHER environment.</div>
+
+      <div class="setting">
+        <div>
+          <b>Glass Interface</b>
+          <small>Use translucent system panels.</small>
+        </div>
+        <div class="toggle active"></div>
+      </div>
+
+      <div class="setting">
+        <div>
+          <b>Animations</b>
+          <small>Enable system animations.</small>
+        </div>
+        <div class="toggle active"></div>
+      </div>
+
+      <div class="setting">
+        <div>
+          <b>Notifications</b>
+          <small>Allow system notifications.</small>
+        </div>
+        <div class="toggle active"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LAUNCHER -->
+
+  <div class="launcher" id="launcher">
+
+    <input
+      class="launcher-search"
+      id="launcher-search"
+      placeholder="Search apps..."
+      oninput="filterApps()"
+    >
+
+    <div class="app-list" id="app-list">
+
+      <button class="launch-app" data-name="files"
+              onclick="launchFromMenu('files')">
+        <div>📁</div>
+        <small>Files</small>
+      </button>
+
+      <button class="launch-app" data-name="terminal"
+              onclick="launchFromMenu('terminal')">
+        <div>⌘</div>
+        <small>Terminal</small>
+      </button>
+
+      <button class="launch-app" data-name="notes"
+              onclick="launchFromMenu('notes')">
+        <div>📝</div>
+        <small>Notes</small>
+      </button>
+
+      <button class="launch-app" data-name="settings"
+              onclick="launchFromMenu('settings')">
+        <div>⚙️</div>
+        <small>Settings</small>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- TASKBAR -->
+
+  <div class="taskbar">
+
+    <button class="task start" onclick="toggleLauncher()">A</button>
+
+    <button class="task" onclick="openApp('files')">📁</button>
+
+    <button class="task" onclick="openApp('terminal')">⌘</button>
+
+    <button class="task" onclick="openApp('notes')">📝</button>
+
+    <button class="task" onclick="openApp('settings')">⚙️</button>
+
+  </div>
+
+  <!-- NOTIFICATION -->
+
+  <div class="notification" id="notification">
+
+    <div class="notification-title" id="notification-title">
+      AETHER
+    </div>
+
+    <div class="notification-text" id="notification-text">
+      Welcome to AETHER OS.
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* BOOT */
+
+setTimeout(() => {
+  document.getElementById("boot").classList.add("hidden");
+
+  setTimeout(() => {
+    notify(
+      "Welcome to AETHER",
+      "System initialization complete."
+    );
+  }, 500);
+
+}, 2600);
+
+
+/* CLOCK */
+
+function updateClock() {
+
+  const now = new Date();
+
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+
+/* WINDOW MANAGEMENT */
+
+let zIndex = 200;
+
+function openApp(app) {
+
+  const win = document.getElementById(app + "-window");
+
+  if (!win) return;
+
+  win.classList.remove("hidden");
+
+  zIndex++;
+
+  win.style.zIndex = zIndex;
+
+  if (app === "terminal") {
+    setTimeout(() => {
+      document.getElementById("terminal-input").focus();
+    }, 100);
+  }
+
+}
+
+function closeApp(app) {
+
+  const win = document.getElementById(app + "-window");
+
+  if (win) {
+    win.classList.add("hidden");
+  }
+
+}
+
+function maximize(id) {
+
+  const win = document.getElementById(id);
+
+  win.classList.toggle("maximized");
+
+}
+
+
+/* DRAG WINDOWS */
+
+document.querySelectorAll(".window").forEach(win => {
+
+  const header = win.querySelector(".window-header");
+
+  let dragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  header.addEventListener("mousedown", e => {
+
+    if (win.classList.contains("maximized")) return;
+
+    dragging = true;
+
+    offsetX = e.clientX - win.offsetLeft;
+    offsetY = e.clientY - win.offsetTop;
+
+    zIndex++;
+    win.style.zIndex = zIndex;
+
+  });
+
+  document.addEventListener("mousemove", e => {
+
+    if (!dragging) return;
+
+    win.style.left = `${e.clientX - offsetX}px`;
+    win.style.top = `${e.clientY - offsetY}px`;
+
+  });
+
+  document.addEventListener("mouseup", () => {
+
+    dragging = false;
+
+  });
+
+});
+
+
+/* LAUNCHER */
+
+function toggleLauncher() {
+
+  const launcher =
+    document.getElementById("launcher");
+
+  launcher.classList.toggle("open");
+
+  if (launcher.classList.contains("open")) {
+
+    setTimeout(() => {
+      document.getElementById("launcher-search").focus();
+    }, 100);
+
+  }
+
+}
+
+function launchFromMenu(app) {
+
+  openApp(app);
+
+  document
+    .getElementById("launcher")
+    .classList.remove("open");
+
+}
+
+function filterApps() {
+
+  const search =
+    document.getElementById("launcher-search")
+      .value
+      .toLowerCase();
+
+  document.querySelectorAll(".launch-app")
+    .forEach(app => {
+
+      app.style.display =
+        app.dataset.name.includes(search)
+          ? ""
+          : "none";
+
+    });
+
+}
+
+
+/* NOTES */
+
+const notes = document.getElementById("notes");
+
+notes.value =
+  localStorage.getItem("aether_notes") || "";
+
+notes.addEventListener("input", () => {
+
+  localStorage.setItem(
+    "aether_notes",
+    notes.value
+  );
+
+});
+
+
+/* TERMINAL */
+
+const terminalInput =
+  document.getElementById("terminal-input");
+
+const terminalOutput =
+  document.getElementById("terminal-output");
+
+terminalInput.addEventListener("keydown", e => {
+
+  if (e.key !== "Enter") return;
+
+  const command =
+    terminalInput.value.trim().toLowerCase();
+
+  terminalInput.value = "";
+
+  runCommand(command);
+
+});
+
+
+function print(text) {
+
+  terminalOutput.textContent +=
+    "\n" + text + "\n";
+
+}
+
+
+function runCommand(command) {
+
+  if (!command) return;
+
+  print("aether@system:~$ " + command);
+
+  switch(command) {
+
+    case "help":
+
+      print(
+`Available commands:
+
+help       Show commands
+clear      Clear terminal
+time       Show current time
+date       Show current date
+files      Open Files
+notes      Open Notes
+settings   Open Settings
+about      About AETHER
+status     System status`
+      );
+
+      break;
+
+
+    case "clear":
+
+      terminalOutput.textContent = "";
+
+      break;
+
+
+    case "time":
+
+      print(new Date().toLocaleTimeString());
+
+      break;
+
+
+    case "date":
+
+      print(new Date().toLocaleDateString());
+
+      break;
+
+
+    case "files":
+
+      openApp("files");
+
+      break;
+
+
+    case "notes":
+
+      openApp("notes");
+
+      break;
+
+
+    case "settings":
+
+      openApp("settings");
+
+      break;
+
+
+    case "about":
+
+      print(
+`AETHER OS
+
+Version 1.0
+Interface: AETHER Desktop
+Status: Online
+
+A new kind of desktop.`
+      );
+
+      break;
+
+
+    case "status":
+
+      print(
+`SYSTEM STATUS
+
+Core: ONLINE
+Desktop: ONLINE
+Window Manager: ONLINE
+Storage: LOCAL
+Network: READY`
+      );
+
+      break;
+
+
+    default:
+
+      print(
+        `"${command}" is not recognized.
+Type "help" for available commands.`
+      );
+
+  }
+
+}
+
+
+/* NOTIFICATIONS */
+
+function notify(title, text) {
+
+  const notification =
+    document.getElementById("notification");
+
+  document.getElementById(
+    "notification-title"
+  ).textContent = title;
+
+  document.getElementById(
+    "notification-text"
+  ).textContent = text;
+
+  notification.classList.add("show");
+
+  setTimeout(() => {
+
+    notification.classList.remove("show");
+
+  }, 3500);
+
+}
+
+
+/* KEYBOARD SHORTCUTS */
+
+document.addEventListener("keydown", e => {
+
+  /* Start menu */
+
+  if (e.key === "Meta" || e.key === "Control") {
+    return;
+  }
+
+  if (e.key === "Escape") {
+
+    document
+      .getElementById("launcher")
+      .classList.remove("open");
+
+  }
+
+  /* Ctrl + Space */
+
+  if (e.ctrlKey && e.code === "Space") {
+
+    e.preventDefault();
+
+    toggleLauncher();
+
+  }
+
+});
+
+
+/* TOGGLES */
+
+document.querySelectorAll(".toggle")
+  .forEach(toggle => {
+
+    toggle.addEventListener("click", () => {
+
+      toggle.classList.toggle("active");
+
+    });
+
+  });
+
+
+/* DESKTOP CLICK */
+
+document.getElementById("desktop")
+  .addEventListener("mousedown", e => {
+
+    if (
+      e.target.id === "desktop" ||
+      e.target.classList.contains("center")
+    ) {
+
+      document
+        .getElementById("launcher")
+        .classList.remove("open");
+
+    }
+
+  });
+
+</script>
+
+</body>
+</html>
